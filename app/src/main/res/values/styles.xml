@@ -1,0 +1,12 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/progress_primary</item>
+        <item name="colorPrimaryDark">@color/material_dynamic_primary10</item>
+        <item name="colorAccent">@color/progress_max_active</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
