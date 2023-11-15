@@ -126,11 +126,11 @@ class StoryDisplayFragment : Fragment(),
         if (stories[counter].isVideo()) {
 
             binding.  storyDisplayImage.hide()
-            binding.   storyDisplayVideoProgress.show()
+
 
         } else {
 
-            binding.    storyDisplayVideoProgress.hide()
+
             binding.    storyDisplayImage.show()
             Glide.with(this).load(stories[counter].url).into( binding. storyDisplayImage)
         }

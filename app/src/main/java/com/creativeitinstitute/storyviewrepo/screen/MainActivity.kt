@@ -77,15 +77,13 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
 
     private fun preLoadStories(storyUserList: ArrayList<StoryUser>) {
         val imageList = mutableListOf<String>()
-        val videoList = mutableListOf<String>()
+
 
         storyUserList.forEach { storyUser ->
             storyUser.stories.forEach { story ->
-                if (story.isVideo()) {
-                    videoList.add(story.url)
-                } else {
+
                     imageList.add(story.url)
-                }
+
             }
         }
 
