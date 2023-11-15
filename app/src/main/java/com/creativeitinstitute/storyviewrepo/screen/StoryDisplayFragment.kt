@@ -158,11 +158,12 @@ class StoryDisplayFragment : Fragment(),
                         if (counter == stories.size - 1) {
                             pageViewOperator?.nextPageView()
                         } else {
-                            binding.   storiesProgressView?.skip()
+                            binding.storiesProgressView?.skip()
                         }
                     }
                    binding. previous -> {
                         if (counter == 0) {
+                            binding.storiesProgressView?.reverse()
                             pageViewOperator?.backPageView()
                         } else {
                             binding.    storiesProgressView?.reverse()

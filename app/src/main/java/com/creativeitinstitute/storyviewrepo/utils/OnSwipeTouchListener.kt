@@ -69,7 +69,7 @@ open class OnSwipeTouchListener(context: Activity) : View.OnTouchListener {
         }
 
         override fun onLongPress(e: MotionEvent) {
-            onLongClick()
+           // onLongClick()
         }
     }
 
