@@ -1,10 +1,10 @@
 package com.creativeitinstitute.storyviewrepo.utils
 
-import com.creativeitinstitute.storyviewrepo.data.Story
-import com.creativeitinstitute.storyviewrepo.data.StoryUser
+import com.creativeitinstitute.storyviewrepo.data.remote.Story
+import com.creativeitinstitute.storyviewrepo.data.remote.StoryUser
 import kotlin.random.Random
 
-object StoryGenerator {
+object StoryGeneratorRemote {
 
     fun generateStories(): ArrayList<StoryUser> {
         val storyUrls = ArrayList<String>()
@@ -55,6 +55,8 @@ object StoryGenerator {
         userProfileUrls.add("https://randomuser.me/api/portraits/men/11.jpg")
 
         val storyUserList = ArrayList<StoryUser>()
+
+
         for (i in 1..10) {
             val stories = ArrayList<Story>()
             val storySize = Random.nextInt(1, 5)

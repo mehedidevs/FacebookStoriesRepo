@@ -1,4 +1,4 @@
-package com.creativeitinstitute.storyviewrepo.data
+package com.creativeitinstitute.storyviewrepo.data.remote
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

@@ -9,10 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.bumptech.glide.Glide
 import com.creativeitinstitute.storyviewrepo.customview.StoryPagerAdapter
-import com.creativeitinstitute.storyviewrepo.data.StoryUser
+import com.creativeitinstitute.storyviewrepo.data.remote.StoryUser
 import com.creativeitinstitute.storyviewrepo.databinding.ActivityMainBinding
 import com.creativeitinstitute.storyviewrepo.utils.CubeOutTransformer
-import com.creativeitinstitute.storyviewrepo.utils.StoryGenerator
+import com.creativeitinstitute.storyviewrepo.utils.StoryGeneratorLocal
+import com.creativeitinstitute.storyviewrepo.utils.StoryGeneratorRemote
 
 class MainActivity : AppCompatActivity(), PageViewOperator {
 
@@ -47,13 +48,16 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
             }
         } else {
             //there is no next story
+
             Toast.makeText(this, "All stories displayed.", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun setUpPager() {
-        val storyUserList = StoryGenerator.generateStories()
+        val storyUserList = StoryGeneratorRemote.generateStories()
         preLoadStories(storyUserList)
+
+     //   val storyUserList = StoryGeneratorLocal.generateStoriesRes()
 
         pagerAdapter = StoryPagerAdapter(
             supportFragmentManager, storyUserList
@@ -77,15 +81,11 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
 
     private fun preLoadStories(storyUserList: ArrayList<StoryUser>) {
         val imageList = mutableListOf<String>()
-        val videoList = mutableListOf<String>()
+
 
         storyUserList.forEach { storyUser ->
             storyUser.stories.forEach { story ->
-                if (story.isVideo()) {
-                    videoList.add(story.url)
-                } else {
-                    imageList.add(story.url)
-                }
+                imageList.add(story.url)
             }
         }
 
@@ -107,7 +107,6 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
 
     /**
      * Change ViewPage sliding programmatically(not using reflection).
-     * https://tech.dely.jp/entry/2018/12/13/110000
      * What for?
      * setCurrentItem(int, boolean) changes too fast. And it cannot set animation duration.
      */

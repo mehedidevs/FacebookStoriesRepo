@@ -6,7 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.creativeitinstitute.storyviewrepo.data.StoryUser
+import com.creativeitinstitute.storyviewrepo.data.local.StoryUserLocal
+import com.creativeitinstitute.storyviewrepo.data.remote.StoryUser
 import com.creativeitinstitute.storyviewrepo.screen.StoryDisplayFragment
 
 class StoryPagerAdapter constructor(fragmentManager: FragmentManager, private val storyList: ArrayList<StoryUser>)

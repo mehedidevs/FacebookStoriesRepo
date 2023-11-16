@@ -12,11 +12,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.creativeitinstitute.storyviewrepo.customview.StoriesProgressView
-import com.creativeitinstitute.storyviewrepo.data.Story
-import com.creativeitinstitute.storyviewrepo.data.StoryUser
+import com.creativeitinstitute.storyviewrepo.data.local.StoryLocal
+import com.creativeitinstitute.storyviewrepo.data.local.StoryUserLocal
+import com.creativeitinstitute.storyviewrepo.data.remote.Story
+import com.creativeitinstitute.storyviewrepo.data.remote.StoryUser
 import com.creativeitinstitute.storyviewrepo.databinding.FragmentStoryDisplayBinding
 import com.creativeitinstitute.storyviewrepo.utils.OnSwipeTouchListener
-import com.creativeitinstitute.storyviewrepo.utils.hide
 import com.creativeitinstitute.storyviewrepo.utils.show
 import java.util.Calendar
 import java.util.Locale
@@ -38,12 +39,22 @@ class StoryDisplayFragment : Fragment(),
     lazy { storyUser.stories }
 
 
+//    private val storyUser: StoryUserLocal by
+//    lazy {
+//        (arguments?.getParcelable<StoryUserLocal>(
+//            EXTRA_STORY_USER
+//        ) as StoryUserLocal)
+//    }
+//
+//    private val stories: ArrayList<StoryLocal> by
+//    lazy { storyUser.stories }
+
+
     private var pageViewOperator: PageViewOperator? = null
     private var counter = 0
     private var pressTime = 0L
     private var limit = 500L
     private var onResumeCalled = false
-    private var onVideoPrepared = false
 
 
     lateinit var binding: FragmentStoryDisplayBinding
@@ -53,7 +64,7 @@ class StoryDisplayFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentStoryDisplayBinding.inflate(inflater, container, false)
+        binding = FragmentStoryDisplayBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -85,14 +96,14 @@ class StoryDisplayFragment : Fragment(),
         } else {
             // restart animation
             counter = MainActivity.progressState.get(arguments?.getInt(EXTRA_POSITION) ?: 0)
-            binding. storiesProgressView?.startStories(counter)
+            binding.storiesProgressView?.startStories(counter)
         }
     }
 
     override fun onPause() {
         super.onPause()
 
-        binding.  storiesProgressView?.abandon()
+        binding.storiesProgressView?.abandon()
     }
 
     override fun onComplete() {
@@ -123,22 +134,13 @@ class StoryDisplayFragment : Fragment(),
 
     private fun updateStory() {
 
-        if (stories[counter].isVideo()) {
-
-            binding.  storyDisplayImage.hide()
-            binding.   storyDisplayVideoProgress.show()
-
-        } else {
-
-            binding.    storyDisplayVideoProgress.hide()
-            binding.    storyDisplayImage.show()
-            Glide.with(this).load(stories[counter].url).into( binding. storyDisplayImage)
-        }
+        binding.storyDisplayImage.show()
+        Glide.with(this).load(stories[counter].url).into(binding.storyDisplayImage)
 
         val cal: Calendar = Calendar.getInstance(Locale.ENGLISH).apply {
             timeInMillis = stories[counter].storyDate
         }
-        binding.  storyDisplayTime.text = DateFormat.format("MM-dd-yyyy HH:mm:ss", cal).toString()
+        binding.storyDisplayTime.text = DateFormat.format("MM-dd-yyyy HH:mm:ss", cal).toString()
     }
 
 
@@ -154,18 +156,20 @@ class StoryDisplayFragment : Fragment(),
 
             override fun onClick(view: View) {
                 when (view) {
-                   binding. next -> {
+                    binding.next -> {
                         if (counter == stories.size - 1) {
                             pageViewOperator?.nextPageView()
                         } else {
-                            binding.   storiesProgressView?.skip()
+                            binding.storiesProgressView?.skip()
                         }
                     }
-                   binding. previous -> {
+
+                    binding.previous -> {
                         if (counter == 0) {
+                            binding.storiesProgressView?.reverse()
                             pageViewOperator?.backPageView()
                         } else {
-                            binding.    storiesProgressView?.reverse()
+                            binding.storiesProgressView?.reverse()
                         }
                     }
                 }
@@ -181,10 +185,13 @@ class StoryDisplayFragment : Fragment(),
                     MotionEvent.ACTION_DOWN -> {
                         pressTime = System.currentTimeMillis()
                         pauseCurrentStory()
+                        showStoryOverlay()
+                        // hideStoryOverlay()
                         return false
                     }
+
                     MotionEvent.ACTION_UP -> {
-                        showStoryOverlay()
+
                         resumeCurrentStory()
                         return limit < System.currentTimeMillis() - pressTime
                     }
@@ -192,32 +199,33 @@ class StoryDisplayFragment : Fragment(),
                 return false
             }
         }
-        binding.    previous.setOnTouchListener(touchListener)
-        binding.   next.setOnTouchListener(touchListener)
+        binding.previous.setOnTouchListener(touchListener)
+        binding.next.setOnTouchListener(touchListener)
 
-        binding.  storiesProgressView?.setStoriesCountDebug(
+        binding.storiesProgressView?.setStoriesCountDebug(
             stories.size, position = arguments?.getInt(EXTRA_POSITION) ?: -1
         )
-        binding.   storiesProgressView?.setAllStoryDuration(4000L)
-        binding.   storiesProgressView?.setStoriesListener(this)
+        binding.storiesProgressView?.setAllStoryDuration(4000L)
+        binding.storiesProgressView?.setStoriesListener(this)
 
-        Glide.with(this).load(storyUser.profilePicUrl).circleCrop().into( binding. storyDisplayProfilePicture)
-        binding.     storyDisplayNick.text = storyUser.username
+        Glide.with(this).load(storyUser.profilePicUrl).circleCrop()
+            .into(binding.storyDisplayProfilePicture)
+        binding.storyDisplayNick.text = storyUser.username
     }
 
     private fun showStoryOverlay() {
-        if ( binding. storyOverlay == null ||  binding. storyOverlay.alpha != 0F) return
+        if (binding.storyOverlay == null || binding.storyOverlay.alpha != 0F) return
 
-        binding. storyOverlay.animate()
+        binding.storyOverlay.animate()
             .setDuration(100)
             .alpha(1F)
             .start()
     }
 
     private fun hideStoryOverlay() {
-        if ( binding. storyOverlay == null ||  binding. storyOverlay.alpha != 1F) return
+        if (binding.storyOverlay == null || binding.storyOverlay.alpha != 1F) return
 
-        binding. storyOverlay.animate()
+        binding.storyOverlay.animate()
             .setDuration(200)
             .alpha(0F)
             .start()
@@ -233,14 +241,14 @@ class StoryDisplayFragment : Fragment(),
 
     fun pauseCurrentStory() {
 
-        binding. storiesProgressView?.pause()
+        binding.storiesProgressView?.pause()
     }
 
     fun resumeCurrentStory() {
         if (onResumeCalled) {
 
             showStoryOverlay()
-            binding.   storiesProgressView?.resume()
+            binding.storiesProgressView?.resume()
         }
     }
 

@@ -86,7 +86,7 @@ class StoriesProgressView @JvmOverloads constructor(
                     progressBars[next].startProgress()
                     ++current
                 } else {
-                    isComplete = true
+                    isComplete = false
                     if (storiesListener != null) storiesListener!!.onComplete()
                 }
                 isSkipStart = false
