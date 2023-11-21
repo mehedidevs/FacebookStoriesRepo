@@ -11,8 +11,8 @@ class PausableScaleAnimation internal constructor(
     fromX, toX, fromY, toY, pivotXType, pivotXValue, pivotYType,
     pivotYValue
 ) {
-    private var elapsedAtPause: Long = 0
-    private var isPaused = false
+     var elapsedAtPause: Long = 0
+     var isPaused = false
     override fun getTransformation(
         currentTime: Long,
         outTransformation: Transformation,

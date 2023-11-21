@@ -1,6 +1,7 @@
 package com.creativeitinstitute.storyviewrepo.screen
 
 
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -12,8 +13,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.creativeitinstitute.storyviewrepo.customview.StoriesProgressView
-import com.creativeitinstitute.storyviewrepo.data.local.StoryLocal
-import com.creativeitinstitute.storyviewrepo.data.local.StoryUserLocal
 import com.creativeitinstitute.storyviewrepo.data.remote.Story
 import com.creativeitinstitute.storyviewrepo.data.remote.StoryUser
 import com.creativeitinstitute.storyviewrepo.databinding.FragmentStoryDisplayBinding
@@ -21,6 +20,7 @@ import com.creativeitinstitute.storyviewrepo.utils.OnSwipeTouchListener
 import com.creativeitinstitute.storyviewrepo.utils.show
 import java.util.Calendar
 import java.util.Locale
+
 
 class StoryDisplayFragment : Fragment(),
     StoriesProgressView.StoriesListener {
@@ -65,9 +65,18 @@ class StoryDisplayFragment : Fragment(),
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStoryDisplayBinding.inflate(inflater, container, false)
+        binding.closeBtn.setOnClickListener {
+
+            MainActivity.progressState.clear()
+
+            requireActivity().finish()
+        }
+
 
         return binding.root
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

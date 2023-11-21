@@ -12,15 +12,15 @@ import com.creativeitinstitute.storyviewrepo.customview.StoryPagerAdapter
 import com.creativeitinstitute.storyviewrepo.data.remote.StoryUser
 import com.creativeitinstitute.storyviewrepo.databinding.ActivityMainBinding
 import com.creativeitinstitute.storyviewrepo.utils.CubeOutTransformer
-import com.creativeitinstitute.storyviewrepo.utils.StoryGeneratorLocal
 import com.creativeitinstitute.storyviewrepo.utils.StoryGeneratorRemote
 
-class MainActivity : AppCompatActivity(), PageViewOperator {
+open class MainActivity : AppCompatActivity(), PageViewOperator {
 
     private lateinit var pagerAdapter: StoryPagerAdapter
     private var currentPage: Int = 0
 
     lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,8 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
         } else {
             //there is no next story
 
+            progressState.clear()
+
             Toast.makeText(this, "All stories displayed.", Toast.LENGTH_LONG).show()
         }
     }
@@ -57,7 +59,7 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
         val storyUserList = StoryGeneratorRemote.generateStories()
         preLoadStories(storyUserList)
 
-     //   val storyUserList = StoryGeneratorLocal.generateStoriesRes()
+        //   val storyUserList = StoryGeneratorLocal.generateStoriesRes()
 
         pagerAdapter = StoryPagerAdapter(
             supportFragmentManager, storyUserList
@@ -149,9 +151,14 @@ class MainActivity : AppCompatActivity(), PageViewOperator {
                 }
             }.start()
         }
+
+
     }
 
     companion object {
         val progressState = SparseIntArray()
     }
+
+
+
 }

@@ -16,6 +16,13 @@ class PausableProgressBar @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
+    fun getCallbackForTesting(): Callback? {
+        return callback
+    }
+
+    fun getMaxProgressViewForTesting(): View? {
+        return maxProgressView
+    }
 
     private var frontProgressView: View? = null
     private var maxProgressView: View? = null
@@ -68,7 +75,7 @@ class PausableProgressBar @JvmOverloads constructor(
         }
     }
 
-    private fun finishProgress(isMax: Boolean) {
+     fun finishProgress(isMax: Boolean) {
         if (isMax) maxProgressView!!.setBackgroundResource(R.color.progress_max_active)
         maxProgressView!!.visibility = if (isMax) View.VISIBLE else View.GONE
         if (animation != null) {
